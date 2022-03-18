@@ -1,18 +1,26 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom"
 import { useMutation } from "react-query";
 import { toast } from "react-toastify";
-import loginImg from "../../assets/login.jpg";
 import authService from "../../services/auth/authService";
+import SideImage from "../../components/SideImage/SideImage";
 
 const Register = () => {
     const navigate = useNavigate();
+
+    const user = localStorage.getItem("authToken");
+
+    useEffect(() => {
+        if (user) {
+            navigate("/")
+        }
+    }, [navigate, user])
 
     const [formData, setFormData] = useState({
         username: "",
         email: "",
         password: "",
-        passwordRepeat: ""
+        passwordRepeat: "",
     })
 
     const {
@@ -24,24 +32,24 @@ const Register = () => {
 
     const {
         mutate,
-    } = useMutation((newUser) => authService.register(newUser), {
-        onSuccess: () => {
-            navigate("/");
-            toast.success("You have successfully registered", { theme: "dark" })
-        },
-        onError: (error) => toast.error(error.response.data.message, { theme: "dark" })
-    });
+    } = useMutation((newUser) => authService.register(newUser));
 
     const handleSubmit = (e) => {
         e.preventDefault();
         if (password !== passwordRepeat) {
             toast.error("Passwords do not match", { theme: "dark" });
         } else {
-             mutate({
-                 username,
-                 email,
-                 password
-             })
+            mutate({
+                username,
+                email,
+                password
+            }, {
+                onSuccess: () => {
+                    navigate("/");
+                    toast.success("You have successfully registered", { theme: "dark" })
+                },
+                onError: (error) => toast.error(error.response.data.message, { theme: "dark" })
+            })
         }
     }
 
@@ -76,7 +84,6 @@ const Register = () => {
                                         name="username"
                                         className="form-control form-control-lg"
                                         placeholder="Username"
-                                        required
                                         value={username}
                                         onChange={handleChange}
                                     />
@@ -88,7 +95,6 @@ const Register = () => {
                                         name="email"
                                         className="form-control form-control-lg"
                                         placeholder="Email address"
-                                        required
                                         value={email}
                                         onChange={handleChange}
                                     />
@@ -97,20 +103,20 @@ const Register = () => {
                                     <input
                                         type="password"
                                         id="password"
+                                        name="password"
                                         className="form-control form-control-lg"
                                         placeholder="Password"
-                                        required
                                         value={password}
                                         onChange={handleChange}
                                     />
                                 </div>
                                 <div className="form-outline mb-4">
                                     <input
-                                        type="password"
-                                        id="repeatpassword"
+                                        type="text"
+                                        id="passwordRepeat"
+                                        name="passwordRepeat"
                                         className="form-control form-control-lg"
                                         placeholder="Confirm password"
-                                        required
                                         value={passwordRepeat}
                                         onChange={handleChange}
                                     />
@@ -118,24 +124,17 @@ const Register = () => {
                                 <div className="pt-1 mb-4 w-100">
                                     <button
                                         className="btn btn-info btn-lg btn-block w-100 text-light"
-                                        type="button"
+                                        type="submit"
                                     >
                                         Register
                                     </button>
                                 </div>
-                                <p className="small mb-5 pb-lg-2"><a className="text-muted" href="#!">Forgot password?</a></p>
+                                <p className="small mb-4 pb-lg-2"><Link to="/forgotpassword" className="text-muted">Forgot password?</Link></p>
                                 <p>Already have an account? <Link to="/login" className="link-info">Log In</Link></p>
                             </form>
                         </div>
                     </div>
-                    <div className="col-sm-6 px-0 d-none d-sm-block">
-                        <img
-                            src={loginImg}
-                            alt="Login"
-                            className="w-100 vh-100"
-                            style={{ objectFit: 'cover', objectPosition: 'left' }}
-                        />
-                    </div>
+                    <SideImage />
                 </div>
             </div>
         </section>

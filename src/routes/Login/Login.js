@@ -9,19 +9,6 @@ import SideImage from "../../components/SideImage/SideImage";
 const Login = () => {
     const { register, handleSubmit } = useForm();
 
-    const onSubmit = (data) => {
-        mutate(data, {
-            onSuccess: () => {
-                navigate("/");
-                toast.success("Welcome back", { theme: "dark" })
-            },
-            onError: (error) => {
-                toast.error(error.response.data.message, { theme: "dark" })
-            }
-        })
-
-    }
-
     const navigate = useNavigate();
 
     const user = localStorage.getItem("authToken");
@@ -36,6 +23,19 @@ const Login = () => {
         mutate,
     } = useMutation((userData) => authService.login(userData));
 
+    const onSubmit = (data) => {
+        mutate(data, {
+            onSuccess: (res) => {
+                toast.success(res.message, { theme: "dark" });
+                navigate("/");
+            },
+            onError: (error) => {
+                toast.error(error.response.data.message, { theme: "dark" })
+            }
+        })
+
+    }
+
     return (
         <section className="vh-100">
             <div className="container-fluid">
@@ -44,6 +44,7 @@ const Login = () => {
                         <div className="d-flex align-items-center h-custom-2 px-5 ms-xl-4 pt-5 pt-xl-0 mt-xl-n5">
                             <form
                                 style={{ width: '23rem' }}
+                                autoComplete="off"
                                 onSubmit={handleSubmit(onSubmit)}
                             >
                                 <h3 className="fw-normal mb-3 pb-3" style={{ letterSpacing: '1px' }}>Log in</h3>

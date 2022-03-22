@@ -26,21 +26,17 @@ const Register = () => {
     const onSubmit = (data) => {
         const { username, email, password, passwordRepeat } = data;
 
-        if (username.length < 5 || username.length > 20) {
-            toast.error("Username should be between 5-20 characters", { theme: "dark" });
-        } else if (password !== passwordRepeat) {
+        if (password !== passwordRepeat) {
             toast.error("Passwords do not match", { theme: "dark" });
-        } else if (password.length < 6) {
-            toast.error("Password should be at least 6 characters", { theme: "dark" });
         } else {
             mutate({
                 username,
                 email,
                 password
             }, {
-                onSuccess: () => {
+                onSuccess: (res) => {
+                    toast.success(res.message, { theme: "dark" });
                     navigate("/");
-                    toast.success("You have successfully registered", { theme: "dark" })
                 },
                 onError: (error) => toast.error(error.response.data.message, { theme: "dark" })
             })

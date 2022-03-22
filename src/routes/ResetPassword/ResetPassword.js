@@ -1,12 +1,16 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useMutation } from "react-query";
 import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
+import { useForm } from "react-hook-form";
 import SideImage from "../../components/SideImage/SideImage";
 import authService from "../../services/auth/authService";
 
 const ResetPassword = () => {
+    const { register, handleSubmit } = useForm();
+
     const navigate = useNavigate();
+
     const { resetToken } = useParams();
 
     const user = localStorage.getItem("authToken");
@@ -17,40 +21,23 @@ const ResetPassword = () => {
         }
     }, [navigate, user])
 
-    const [formData, setFormData] = useState({
-        password: "",
-        passwordConfirm: "",
-    })
-
-    const {
-        password,
-        passwordConfirm
-    } = formData;
-
     const {
         mutate,
     } = useMutation((password) => authService.resetPassword(resetToken, password));
 
-    const handleSubmit = (e) => {
-        e.preventDefault();
+    const onSubmit = (data) => {
+        const { password, passwordConfirm } = data;
         if (password !== passwordConfirm) {
             toast.error("Passwords do not match", { theme: "dark" });
         } else {
             mutate({ password }, {
-                onSuccess: () => {
-                    toast.success("Password has been changed succesfully", { theme: "dark" })
+                onSuccess: (res) => {
+                    toast.success(res.message, { theme: "dark" });
                     navigate("/");
                 },
                 onError: (error) => toast.error(error.response.data.message, { theme: "dark" })
             })
         }
-    }
-
-    const handleChange = (e) => {
-        setFormData((prevState) => ({
-            ...prevState,
-            [e.target.name]: e.target.value
-        }))
     }
 
     return (
@@ -62,7 +49,7 @@ const ResetPassword = () => {
                             <form
                                 style={{ width: '23rem' }}
                                 autoComplete="off"
-                                onSubmit={handleSubmit}
+                                onSubmit={handleSubmit(onSubmit)}
                             >
                                 <h3
                                     className="fw-normal mb-3 pb-3"
@@ -73,23 +60,17 @@ const ResetPassword = () => {
                                 <div className="form-outline mb-4">
                                     <input
                                         type="password"
-                                        id="password"
-                                        name="password"
                                         className="form-control form-control-lg"
                                         placeholder="New password"
-                                        value={password}
-                                        onChange={handleChange}
+                                        {...register("password")}
                                     />
                                 </div>
                                 <div className="form-outline mb-4">
                                     <input
                                         type="password"
-                                        id="passwordConfirm"
-                                        name="passwordConfirm"
                                         className="form-control form-control-lg"
                                         placeholder="Confirm new password"
-                                        value={passwordConfirm}
-                                        onChange={handleChange}
+                                        {...register("passwordConfirm")}
                                     />
                                 </div>
                                 <div className="pt-1 mb-4 w-100">

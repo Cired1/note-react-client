@@ -1,11 +1,13 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useMutation } from "react-query";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import { useForm } from "react-hook-form";
 import SideImage from "../../components/SideImage/SideImage";
 import authService from "../../services/auth/authService";
 
 const ForgotPassword = () => {
+    const { register, handleSubmit, reset } = useForm();
 
     const navigate = useNavigate();
 
@@ -17,29 +19,19 @@ const ForgotPassword = () => {
         }
     }, [navigate, user])
 
-    const [email, setEmail] = useState("")
-
     const {
         mutate,
     } = useMutation((email) => authService.forgotPassword(email));
 
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        if (email === "") {
-            toast.error("Please enter your email", { theme: "dark" });
-        } else {
-            mutate({ email }, {
-                onSuccess: () => {
-                    setEmail("");
-                    toast.success("We have send a link to reset your password to your email", { theme: "dark" })
-                },
-                onError: (error) => toast.error(error.response.data.message, { theme: "dark" })
-            })
-        }
-    }
-
-    const handleChange = (e) => {
-        setEmail(e.target.value);
+    const onSubmit = (data) => {
+        const { email } = data;
+        mutate({ email }, {
+            onSuccess: (res) => {
+                toast.success(res.message, { theme: "dark" });
+                reset({ email: "" });
+            },
+            onError: (error) => toast.error(error.response.data.message, { theme: "dark" })
+        })
     }
 
     return (
@@ -48,11 +40,10 @@ const ForgotPassword = () => {
                 <div className="row">
                     <div className="col-sm-6 text-black">
                         <div className="d-flex align-items-center h-custom-2 px-5 ms-xl-4 pt-5 pt-xl-0 mt-xl-n5">
-
                             <form
                                 style={{ width: '23rem' }}
                                 autoComplete="off"
-                                onSubmit={handleSubmit}
+                                onSubmit={handleSubmit(onSubmit)}
                             >
                                 <h3
                                     className="fw-normal mb-3 pb-3"
@@ -66,12 +57,9 @@ const ForgotPassword = () => {
                                 <div className="form-outline mb-4">
                                     <input
                                         type="email"
-                                        id="email"
-                                        name="email"
                                         className="form-control form-control-lg"
                                         placeholder="Email address"
-                                        value={email}
-                                        onChange={handleChange}
+                                        {...register("email")}
                                     />
                                 </div>
                                 <div className="pt-1 mb-4 w-100">

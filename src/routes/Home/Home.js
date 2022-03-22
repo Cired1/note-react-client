@@ -1,8 +1,13 @@
 import { useEffect } from "react"
 import { useNavigate } from "react-router-dom";
-import authService from "../../services/auth/authService";
+import Header from "../../components/Header/Header";
+import Modal from "../../components/Modal/Modal";
+import Navbar from "../../components/Navbar/Navbar";
+import NoteList from "../../components/NoteList/NoteList";
+import CreateNote from "../../components/CreateNote/CreateNote";
 
 const Home = () => {
+
     const navigate = useNavigate();
 
     const user = localStorage.getItem("authToken");
@@ -13,21 +18,18 @@ const Home = () => {
         }
     }, [navigate, user])
 
-    const handleLogout = () => {
-        authService.logout();
-        navigate("/login")
-    }
-
     return (
-        <section className="container vh-100">
-            <h1>Bienvenido</h1>
-            <button
-                className="btn btn-primary"
-                onClick={handleLogout}
-            >
-                Log out
-            </button>
-        </section>
+        <>
+            <Navbar />
+            <div className="container pt-4">
+                <Header />
+                <NoteList />
+            </div>
+            <Modal>
+                <CreateNote />
+            </Modal>
+        </>
+
     )
 }
 

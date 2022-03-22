@@ -3,7 +3,6 @@ import { Link, useNavigate } from "react-router-dom";
 import { useMutation } from "react-query";
 import { toast } from "react-toastify";
 import authService from "../../services/auth/authService";
-import loginImg from "../../assets/login.jpg";
 import SideImage from "../../components/SideImage/SideImage";
 
 const Login = () => {

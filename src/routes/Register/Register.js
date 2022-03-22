@@ -112,7 +112,7 @@ const Register = () => {
                                 </div>
                                 <div className="form-outline mb-4">
                                     <input
-                                        type="text"
+                                        type="password"
                                         id="passwordRepeat"
                                         name="passwordRepeat"
                                         className="form-control form-control-lg"

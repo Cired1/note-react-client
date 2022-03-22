@@ -1,11 +1,14 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom"
 import { useMutation } from "react-query";
 import { toast } from "react-toastify";
+import { useForm } from "react-hook-form";
 import authService from "../../services/auth/authService";
 import SideImage from "../../components/SideImage/SideImage";
 
 const Register = () => {
+    const { register, handleSubmit } = useForm();
+
     const navigate = useNavigate();
 
     const user = localStorage.getItem("authToken");
@@ -16,28 +19,19 @@ const Register = () => {
         }
     }, [navigate, user])
 
-    const [formData, setFormData] = useState({
-        username: "",
-        email: "",
-        password: "",
-        passwordRepeat: "",
-    })
-
-    const {
-        username,
-        email,
-        password,
-        passwordRepeat
-    } = formData;
-
     const {
         mutate,
     } = useMutation((newUser) => authService.register(newUser));
 
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        if (password !== passwordRepeat) {
+    const onSubmit = (data) => {
+        const { username, email, password, passwordRepeat } = data;
+
+        if (username.length < 5 || username.length > 20) {
+            toast.error("Username should be between 5-20 characters", { theme: "dark" });
+        } else if (password !== passwordRepeat) {
             toast.error("Passwords do not match", { theme: "dark" });
+        } else if (password.length < 6) {
+            toast.error("Password should be at least 6 characters", { theme: "dark" });
         } else {
             mutate({
                 username,
@@ -53,13 +47,6 @@ const Register = () => {
         }
     }
 
-    const handleChange = (e) => {
-        setFormData((prevState) => ({
-            ...prevState,
-            [e.target.name]: e.target.value
-        }))
-    }
-
     return (
         <section className="vh-100">
             <div className="container-fluid">
@@ -69,7 +56,7 @@ const Register = () => {
                             <form
                                 style={{ width: '23rem' }}
                                 autoComplete="off"
-                                onSubmit={handleSubmit}
+                                onSubmit={handleSubmit(onSubmit)}
                             >
                                 <h3
                                     className="fw-normal mb-3 pb-3"
@@ -80,45 +67,33 @@ const Register = () => {
                                 <div className="form-outline mb-4">
                                     <input
                                         type="text"
-                                        id="username"
-                                        name="username"
                                         className="form-control form-control-lg"
                                         placeholder="Username"
-                                        value={username}
-                                        onChange={handleChange}
+                                        {...register("username")}
                                     />
                                 </div>
                                 <div className="form-outline mb-4">
                                     <input
                                         type="email"
-                                        id="email"
-                                        name="email"
                                         className="form-control form-control-lg"
                                         placeholder="Email address"
-                                        value={email}
-                                        onChange={handleChange}
+                                        {...register("email")}
                                     />
                                 </div>
                                 <div className="form-outline mb-4">
                                     <input
                                         type="password"
-                                        id="password"
-                                        name="password"
                                         className="form-control form-control-lg"
                                         placeholder="Password"
-                                        value={password}
-                                        onChange={handleChange}
+                                        {...register("password")}
                                     />
                                 </div>
                                 <div className="form-outline mb-4">
                                     <input
                                         type="password"
-                                        id="passwordRepeat"
-                                        name="passwordRepeat"
                                         className="form-control form-control-lg"
                                         placeholder="Confirm password"
-                                        value={passwordRepeat}
-                                        onChange={handleChange}
+                                        {...register("passwordRepeat")}
                                     />
                                 </div>
                                 <div className="pt-1 mb-4 w-100">

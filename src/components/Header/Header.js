@@ -3,7 +3,7 @@ import ModalContext from "../../context/modal";
 import { FiPlus } from "react-icons/fi";
 
 const Header = () => {
-    const { openModal } = useContext(ModalContext);
+    const { openCreateModal } = useContext(ModalContext);
 
     return (
         <div className="d-flex bd-highlight mb-3">
@@ -12,7 +12,7 @@ const Header = () => {
                 <button
                     type="button"
                     className="d-flex align-items-center gap-1 btn btn-primary"
-                    onClick={openModal}
+                    onClick={openCreateModal}
                 >
                     <span className="fw-bold">Create</span>
                     <FiPlus size={20} />

@@ -1,43 +1,16 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useMutation } from "react-query";
 import { toast } from "react-toastify";
+import { useForm } from "react-hook-form";
 import authService from "../../services/auth/authService";
 import SideImage from "../../components/SideImage/SideImage";
 
 const Login = () => {
+    const { register, handleSubmit } = useForm();
 
-    const navigate = useNavigate();
-
-    const user = localStorage.getItem("authToken");
-
-    useEffect(() => {
-        if (user) {
-            navigate("/")
-        }
-    }, [navigate, user])
-
-    const [formData, setFormData] = useState({
-        email: "",
-        password: "",
-    })
-
-    const {
-        email,
-        password,
-    } = formData;
-
-    const {
-        mutate,
-    } = useMutation((userData) => authService.login(userData));
-
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        const userData = {
-            email,
-            password
-        }
-        mutate(userData, {
+    const onSubmit = (data) => {
+        mutate(data, {
             onSuccess: () => {
                 navigate("/");
                 toast.success("Welcome back", { theme: "dark" })
@@ -49,12 +22,19 @@ const Login = () => {
 
     }
 
-    const handleChange = (e) => {
-        setFormData((prevState) => ({
-            ...prevState,
-            [e.target.name]: e.target.value
-        }))
-    }
+    const navigate = useNavigate();
+
+    const user = localStorage.getItem("authToken");
+
+    useEffect(() => {
+        if (user) {
+            navigate("/")
+        }
+    }, [navigate, user])
+
+    const {
+        mutate,
+    } = useMutation((userData) => authService.login(userData));
 
     return (
         <section className="vh-100">
@@ -64,29 +44,23 @@ const Login = () => {
                         <div className="d-flex align-items-center h-custom-2 px-5 ms-xl-4 pt-5 pt-xl-0 mt-xl-n5">
                             <form
                                 style={{ width: '23rem' }}
-                                onSubmit={handleSubmit}
+                                onSubmit={handleSubmit(onSubmit)}
                             >
                                 <h3 className="fw-normal mb-3 pb-3" style={{ letterSpacing: '1px' }}>Log in</h3>
                                 <div className="form-outline mb-4">
                                     <input
                                         type="email"
-                                        id="email"
-                                        name="email"
                                         className="form-control form-control-lg"
                                         placeholder="Email address"
-                                        value={email}
-                                        onChange={handleChange}
+                                        {...register("email")}
                                     />
                                 </div>
                                 <div className="form-outline mb-4">
                                     <input
                                         type="password"
-                                        id="password"
-                                        name="password"
                                         className="form-control form-control-lg"
                                         placeholder="Password"
-                                        value={password}
-                                        onChange={handleChange}
+                                        {...register("password")}
                                     />
                                 </div>
                                 <div className="pt-1 mb-4 w-100">

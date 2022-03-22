@@ -1,12 +1,12 @@
 import { useContext } from "react"
 import ModalContext from "../../context/modal"
 
-const Modal = ({ children }) => {
-    const { isOpen, closeModal } = useContext(ModalContext);
+const CreateModal = ({ children }) => {
+    const { isCreateOpen, closeCreateModal } = useContext(ModalContext);
 
     return (
         <div
-            className={`modal${isOpen ? " modal-show" : ""}`}
+            className={`modal${isCreateOpen ? " modal-show" : ""}`}
             tabIndex="-1"
         >
             <div className="modal-dialog">
@@ -15,7 +15,7 @@ const Modal = ({ children }) => {
                         <h5 className="modal-title">Create Note</h5>
                         <button
                             className="btn-close"
-                            onClick={closeModal}
+                            onClick={closeCreateModal}
                         ></button>
                     </div>
                     <div className="modal-body">
@@ -27,4 +27,4 @@ const Modal = ({ children }) => {
     )
 }
 
-export default Modal
+export default CreateModal

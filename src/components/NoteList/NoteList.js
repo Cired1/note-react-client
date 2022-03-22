@@ -30,13 +30,15 @@ const NoteList = () => {
                         </tr>
                         : isError
                             ? <tr><th scope="row" colSpan={5}>{error}</th></tr>
-                            : notes.data.map((note) =>
-                                <tr key={note._id}>
-                                    <td>{note.title}</td>
-                                    <td>{note.content}</td>
-                                    <NoteActions id={note._id} />
-                                </tr>
-                            )
+                            : notes.data.length > 0
+                                ? notes.data.map((note) =>
+                                    <tr key={note._id}>
+                                        <td>{note.title}</td>
+                                        <td>{note.content}</td>
+                                        <NoteActions id={note._id} />
+                                    </tr>
+                                )
+                                : <tr><th scope="row" colSpan={5}>Empty</th></tr>
                     }
                 </tbody>
             </table>

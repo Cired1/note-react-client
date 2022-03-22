@@ -1,7 +1,7 @@
 import { useEffect } from "react"
 import { useNavigate } from "react-router-dom";
 import Header from "../../components/Header/Header";
-import Modal from "../../components/Modal/Modal";
+import CreateModal from "../../components/CreateModal/CreateModal";
 import Navbar from "../../components/Navbar/Navbar";
 import NoteList from "../../components/NoteList/NoteList";
 import CreateNote from "../../components/CreateNote/CreateNote";
@@ -25,9 +25,9 @@ const Home = () => {
                 <Header />
                 <NoteList />
             </div>
-            <Modal>
+            <CreateModal>
                 <CreateNote />
-            </Modal>
+            </CreateModal>
         </>
 
     )

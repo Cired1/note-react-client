@@ -1,33 +1,26 @@
-import { useState, useContext } from "react";
+import { useContext } from "react";
 import ModalContext from "../../context/modal";
 import { useMutation, useQueryClient } from "react-query";
 import { toast } from "react-toastify";
+import { useForm } from "react-hook-form";
 import noteService from "../../services/notes/noteService";
 import { FiSave } from "react-icons/fi";
 
 const CreateNote = () => {
-    const { closeModal } = useContext(ModalContext);
+    const { closeCreateModal } = useContext(ModalContext);
 
     const user = JSON.parse(localStorage.getItem("authToken"));
 
     const queryClient = useQueryClient();
 
-    const [formData, setFormData] = useState({
-        title: "",
-        content: "",
-    })
-
-    const {
-        title,
-        content
-    } = formData;
+    const { register, handleSubmit } = useForm();
 
     const {
         mutate,
     } = useMutation((newNote) => noteService.createNote(user.token, newNote));
 
-    const handleSubmit = (e) => {
-        e.preventDefault();
+    const onSubmit = (data) => {
+        const { title, content } = data;
         mutate({
             title,
             content
@@ -35,45 +28,32 @@ const CreateNote = () => {
             onSuccess: (res) => {
                 toast.success(res.message, { theme: "dark" })
                 queryClient.invalidateQueries("notes");
-                closeModal();
+                closeCreateModal();
             },
             onError: (error) => toast.error(error.response.data.message, { theme: "dark" })
         })
     }
 
-    const handleChange = (e) => {
-        setFormData((prevState) => ({
-            ...prevState,
-            [e.target.name]: e.target.value
-        }))
-    }
-
     return (
         <form
-            onSubmit={handleSubmit}
+            onSubmit={handleSubmit(onSubmit)}
         >
             <div className="form-outline mb-2">
                 <input
                     type="text"
-                    id="title"
-                    name="title"
                     className="form-control form-control-lg"
                     placeholder="Title"
-                    value={title}
-                    onChange={handleChange}
+                    {...register("title")}
                 />
             </div>
             <div className="form-outline mb-2">
                 <textarea
                     type="text"
-                    id="content"
-                    name="content"
                     className="form-control form-control-lg"
                     rows={5}
                     style={{ resize: "none" }}
                     placeholder="Content"
-                    value={content}
-                    onChange={handleChange}
+                    {...register("content")}
                 >
                 </textarea>
             </div>

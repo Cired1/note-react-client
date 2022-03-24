@@ -6,10 +6,10 @@ import { useForm } from "react-hook-form";
 import noteService from "../../services/notes/noteService";
 import { FiSave, FiX } from "react-icons/fi";
 
-const CreateNote = () => {
-    const { closeCreateModal } = useContext(ModalContext);
+const EditNote = () => {
+    const { closeEditModal } = useContext(ModalContext);
 
-    const { register, handleSubmit, reset } = useForm();
+    const { register, handleSubmit } = useForm();
 
     const user = JSON.parse(localStorage.getItem("authToken"));
 
@@ -28,16 +28,14 @@ const CreateNote = () => {
             onSuccess: (res) => {
                 toast.success(res.message, { theme: "dark" })
                 queryClient.invalidateQueries("notes");
-                closeCreateModal();
-                reset({ title: "", content: "" })
+                closeEditModal();
             },
             onError: (error) => toast.error(error.response.data.message, { theme: "dark" })
         })
     }
 
     const closeModal = () => {
-        closeCreateModal();
-        reset({ title: "", content: "" })
+        closeEditModal();
     }
 
     return (
@@ -84,4 +82,4 @@ const CreateNote = () => {
     )
 }
 
-export default CreateNote
+export default EditNote

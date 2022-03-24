@@ -2,10 +2,14 @@ import { useMutation, useQueryClient } from "react-query";
 import { toast } from "react-toastify";
 import noteService from "../../services/notes/noteService";
 import { FiEdit, FiTrash2 } from "react-icons/fi";
+import ModalContext from "../../context/modal";
+import { useContext } from "react";
 
 const NoteActions = ({ id }) => {
     const user = JSON.parse(localStorage.getItem("authToken"));
     const queryClient = useQueryClient();
+
+    const { openEditModal } = useContext(ModalContext);
 
     const {
         mutate,
@@ -24,6 +28,7 @@ const NoteActions = ({ id }) => {
         <td className="d-flex gap-1">
             <button
                 className="d-flex justify-content-center align-items-center btn btn-secondary"
+                onClick={openEditModal}
             >
                 <FiEdit />
             </button>

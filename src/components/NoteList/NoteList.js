@@ -1,6 +1,6 @@
 import { useQuery } from "react-query";
 import noteService from "../../services/notes/noteService";
-import NoteActions from "../NoteActions/NoteActions";
+import { NoteActions } from ".."
 
 const NoteList = () => {
 

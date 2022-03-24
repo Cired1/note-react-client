@@ -1,23 +1,17 @@
-import { useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom"
 import { useMutation } from "react-query";
 import { toast } from "react-toastify";
 import { useForm } from "react-hook-form";
 import authService from "../../services/auth/authService";
-import SideImage from "../../components/SideImage/SideImage";
+import useRedirect from "../../hooks/useRedirect";
+import { SideImage } from "../../components";
 
 const Register = () => {
     const { register, handleSubmit } = useForm();
 
     const navigate = useNavigate();
 
-    const user = localStorage.getItem("authToken");
-
-    useEffect(() => {
-        if (user) {
-            navigate("/")
-        }
-    }, [navigate, user])
+    useRedirect();
 
     const {
         mutate,

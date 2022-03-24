@@ -1,22 +1,9 @@
-import { useEffect } from "react"
-import { useNavigate } from "react-router-dom";
-import Header from "../../components/Header/Header";
-import CreateModal from "../../components/CreateModal/CreateModal";
-import Navbar from "../../components/Navbar/Navbar";
-import NoteList from "../../components/NoteList/NoteList";
-import CreateNote from "../../components/CreateNote/CreateNote";
+import useRedirect from "../../hooks/useRedirect";
+import { Modals, Header, Navbar, NoteList } from "../../components";
 
 const Home = () => {
 
-    const navigate = useNavigate();
-
-    const user = localStorage.getItem("authToken");
-
-    useEffect(() => {
-        if (!user) {
-            navigate("/login");
-        }
-    }, [navigate, user])
+    useRedirect();
 
     return (
         <>
@@ -25,9 +12,7 @@ const Home = () => {
                 <Header />
                 <NoteList />
             </div>
-            <CreateModal>
-                <CreateNote />
-            </CreateModal>
+            <Modals />
         </>
 
     )

@@ -1,23 +1,14 @@
-import { useEffect } from "react";
 import { useMutation } from "react-query";
-import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { useForm } from "react-hook-form";
-import SideImage from "../../components/SideImage/SideImage";
 import authService from "../../services/auth/authService";
+import useRedirect from "../../hooks/useRedirect";
+import { SideImage } from "../../components";
 
 const ForgotPassword = () => {
     const { register, handleSubmit, reset } = useForm();
 
-    const navigate = useNavigate();
-
-    const user = localStorage.getItem("authToken");
-
-    useEffect(() => {
-        if (user) {
-            navigate("/")
-        }
-    }, [navigate, user])
+    useRedirect();
 
     const {
         mutate,

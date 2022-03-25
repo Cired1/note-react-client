@@ -1,11 +1,12 @@
 import { useMutation } from "react-query";
 import { toast } from "react-toastify";
 import { useForm } from "react-hook-form";
-import authService from "../../services/auth/authService";
 import useRedirect from "../../hooks/useRedirect";
+import authService from "../../services/auth/authService";
 import { SideImage } from "../../components";
 
 const ForgotPassword = () => {
+
     const { register, handleSubmit, reset } = useForm();
 
     useRedirect();

@@ -7,11 +7,11 @@ import useRedirect from "../../hooks/useRedirect";
 import { SideImage } from "../../components";
 
 const ResetPassword = () => {
-    const { register, handleSubmit } = useForm();
+    const { resetToken } = useParams();
 
     const navigate = useNavigate();
 
-    const { resetToken } = useParams();
+    const { register, handleSubmit } = useForm();
 
     useRedirect();
 

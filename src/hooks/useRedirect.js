@@ -7,9 +7,7 @@ function useRedirect() {
 
     useEffect(() => {
         if (user) {
-            navigate("/")
-        } else {
-            navigate("/login")
+            navigate("/");
         }
     }, [navigate, user])
 

@@ -7,9 +7,9 @@ import useRedirect from "../../hooks/useRedirect";
 import { SideImage } from "../../components";
 
 const Register = () => {
-    const { register, handleSubmit } = useForm();
-
     const navigate = useNavigate();
+
+    const { register, handleSubmit } = useForm();
 
     useRedirect();
 

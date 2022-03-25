@@ -12,6 +12,16 @@ const getNotes = async (token) => {
     return response.data;
 }
 
+const getNote = async (token, id) => {
+    const config = {
+        headers: {
+            Authorization: `Bearer ${token}`
+        }
+    }
+    const response = await axios.get(BASE_URL + `/${id}`, config);
+    return response.data;
+}
+
 const createNote = async (token, note) => {
     const config = {
         headers: {
@@ -22,13 +32,13 @@ const createNote = async (token, note) => {
     return response.data;
 }
 
-const updateNote = async (token, id) => {
+const updateNote = async (token, id, note) => {
     const config = {
         headers: {
             Authorization: `Bearer ${token}`
         }
     }
-    const response = await axios.put(BASE_URL + `/${id}`, config);
+    const response = await axios.put(BASE_URL + `/${id}`, note, config);
     return response.data;
 }
 
@@ -44,6 +54,7 @@ const deleteNote = async (token, id) => {
 
 const noteService = {
     getNotes,
+    getNote,
     createNote,
     updateNote,
     deleteNote

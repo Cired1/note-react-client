@@ -1,6 +1,7 @@
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import ModalContext from "../../context/modal";
-import { useMutation, useQueryClient } from "react-query";
+import EditContext from "../../context/edit";
+import { useMutation, useQueryClient, useQuery } from "react-query";
 import { toast } from "react-toastify";
 import { useForm } from "react-hook-form";
 import noteService from "../../services/notes/noteService";
@@ -8,30 +9,41 @@ import { FiSave, FiX } from "react-icons/fi";
 
 const EditNote = () => {
     const { closeEditModal } = useContext(ModalContext);
-
-    const { register, handleSubmit } = useForm();
-
+    const { noteId } = useContext(EditContext);
+    const { register, handleSubmit, reset } = useForm();
+    const queryClient = useQueryClient();
     const user = JSON.parse(localStorage.getItem("authToken"));
 
-    const queryClient = useQueryClient();
+    const {
+        data: note,
+    } = useQuery(["note", noteId], () => noteService.getNote(user.token, noteId));
 
     const {
         mutate,
-    } = useMutation((newNote) => noteService.createNote(user.token, newNote));
+    } = useMutation((updatedNote) => noteService.updateNote(user.token, noteId, updatedNote));
+
+    useEffect(() => {
+        if (note) {
+            reset({
+                title: note.data.title,
+                content: note.data.content
+            })
+        }
+    }, [note, reset])
 
     const onSubmit = (data) => {
         const { title, content } = data;
-        mutate({
-            title,
-            content
-        }, {
-            onSuccess: (res) => {
-                toast.success(res.message, { theme: "dark" })
-                queryClient.invalidateQueries("notes");
-                closeEditModal();
-            },
-            onError: (error) => toast.error(error.response.data.message, { theme: "dark" })
-        })
+         mutate({
+             title,
+             content
+         }, {
+             onSuccess: (res) => {
+                 toast.success(res.message, { theme: "dark" })
+                 queryClient.invalidateQueries("notes");
+                 closeEditModal();
+             },
+             onError: (error) => toast.error(error.response.data.message, { theme: "dark" })
+         })
     }
 
     const closeModal = () => {

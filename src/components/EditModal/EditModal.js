@@ -1,12 +1,9 @@
-import { useContext } from "react"
-import ModalContext from "../../context/modal"
 
 const EditModal = ({ children }) => {
-    const { isEditOpen } = useContext(ModalContext);
 
     return (
         <div
-            className={`modal${isEditOpen ? " modal-show" : ""}`}
+            className="modal modal-show"
             tabIndex="-1"
         >
             <div className="modal-dialog">

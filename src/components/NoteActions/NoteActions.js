@@ -3,6 +3,7 @@ import { toast } from "react-toastify";
 import noteService from "../../services/notes/noteService";
 import { FiEdit, FiTrash2 } from "react-icons/fi";
 import ModalContext from "../../context/modal";
+import EditContext from "../../context/edit";
 import { useContext } from "react";
 
 const NoteActions = ({ id }) => {
@@ -10,6 +11,7 @@ const NoteActions = ({ id }) => {
     const queryClient = useQueryClient();
 
     const { openEditModal } = useContext(ModalContext);
+    const { setNoteId } = useContext(EditContext);
 
     const {
         mutate,
@@ -24,11 +26,16 @@ const NoteActions = ({ id }) => {
         })
     }
 
+    const updateNote = () => {
+        openEditModal();
+        setNoteId(id);
+    }
+
     return (
         <td className="d-flex gap-1">
             <button
                 className="d-flex justify-content-center align-items-center btn btn-secondary"
-                onClick={openEditModal}
+                onClick={updateNote}
             >
                 <FiEdit />
             </button>

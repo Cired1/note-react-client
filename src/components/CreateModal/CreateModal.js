@@ -1,12 +1,9 @@
-import { useContext } from "react"
-import ModalContext from "../../context/modal"
 
 const CreateModal = ({ children }) => {
-    const { isCreateOpen } = useContext(ModalContext);
 
     return (
         <div
-            className={`modal${isCreateOpen ? " modal-show" : ""}`}
+            className="modal modal-show"
             tabIndex="-1"
         >
             <div className="modal-dialog">
